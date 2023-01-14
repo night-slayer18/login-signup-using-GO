@@ -1,8 +1,10 @@
 package contollers
 
 import (
+	"bytes"
 	"context"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -17,6 +19,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/gridfs"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -231,3 +234,80 @@ func GetUser() gin.HandlerFunc {
 // 		c.JSON(http.StatusOK, user)
 // 	}
 // }
+
+func UploadFile() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		filename := c.Param("image_name")
+		formFile, err := c.FormFile("file")
+		if err != nil {
+			log.Fatal(err)
+		}
+		openedFile, err := formFile.Open()
+		if err != nil {
+			log.Fatal(err)
+		}
+		data, err := ioutil.ReadAll(openedFile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		bucket, err := gridfs.NewBucket(
+			database.Client.Database("myfiles"),
+		)
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
+		uploadStream, err := bucket.OpenUploadStream(
+			filename,
+		)
+		if err != nil {
+			return
+		}
+		defer uploadStream.Close()
+		fileSize, err := uploadStream.Write(data)
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
+		log.Printf("Write file to DB was successful. %s File size: %d M\n", filename, fileSize)
+		c.JSON(http.StatusOK, uploadStream)
+	}
+}
+
+func DownloadFile() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		fileName := c.Param("image_name")
+		// For CRUD operations, here is an example
+		db := database.Client.Database("myfiles")
+		fsFiles := db.Collection("fs.files")
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		var results bson.M
+		defer cancel()
+		err := fsFiles.FindOne(ctx, bson.M{}).Decode(&results)
+		if err != nil {
+			log.Fatal(err)
+			//log.Fatal("findone")
+		}
+		// you can print out the results
+		//fmt.Println(results)
+
+		bucket, _ := gridfs.NewBucket(
+			db,
+		)
+		var buf bytes.Buffer
+		dStream, err := bucket.DownloadToStreamByName(fileName, &buf)
+		if err != nil {
+			log.Fatal(err)
+			//log.Fatal("download")
+		}
+		fmt.Printf("File size to download: %v\n", dStream)
+		ioutil.WriteFile(fileName, buf.Bytes(), 0600)
+		c.JSON(http.StatusOK, buf.Bytes())
+
+		// img, _, err := image.Decode(bytes.NewReader(buf.Bytes()))
+		// if err != nil {
+		// 	log.Fatalln(err)
+		// }
+		// c.JSON(http.StatusOK, img)
+	}
+}

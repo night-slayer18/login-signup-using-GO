@@ -12,4 +12,6 @@ func UserRoutes(incomingRoutes *gin.Engine) {
 	incomingRoutes.GET("/users", controller.GetUsers())
 	incomingRoutes.DELETE("/users/:user_id", controller.GetUser())
 	//incomingRoutes.DELETE("/users/delete", controller.deleteUser())
+	incomingRoutes.POST("/upload/:image_name", controller.UploadFile())
+	incomingRoutes.GET("/download/:image_name", controller.DownloadFile())
 }
