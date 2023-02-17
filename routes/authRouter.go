@@ -7,6 +7,6 @@ import (
 )
 
 func AuthRoutes(incomingRoutes *gin.Engine) {
-	incomingRoutes.POST("users/signup", controller.DriverSignup())
-	incomingRoutes.POST("users/login", controller.DriverLogin())
+	incomingRoutes.POST("users/Driversignup", controller.DriverSignup())
+	incomingRoutes.POST("users/Driverlogin", controller.DriverLogin())
 }
