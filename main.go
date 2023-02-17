@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	routes "github.com/night-slayer18/golang-jwt-project/routes"
+	routes "github.com/night-slayer18/DriverAppBackEnd/routes"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"

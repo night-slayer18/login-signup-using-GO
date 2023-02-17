@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	helper "github.com/night-slayer18/golang-jwt-project/helpers"
+	helper "github.com/night-slayer18/DriverAppBackEnd/helpers"
 
 	"github.com/gin-gonic/gin"
 )

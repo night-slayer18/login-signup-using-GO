@@ -1,4 +1,4 @@
-module github.com/night-slayer18/golang-jwt-project
+module github.com/night-slayer18/DriverAppBackEnd
 
 go 1.19
 

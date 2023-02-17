@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	database "github.com/night-slayer18/golang-jwt-project/database"
+	database "github.com/night-slayer18/DriverAppBackEnd/database"
 
 	jwt "github.com/dgrijalva/jwt-go"
 

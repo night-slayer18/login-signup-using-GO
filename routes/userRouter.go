@@ -1,8 +1,8 @@
 package routes
 
 import (
-	controller "github.com/night-slayer18/golang-jwt-project/controllers"
-	"github.com/night-slayer18/golang-jwt-project/middleware"
+	controller "github.com/night-slayer18/DriverAppBackEnd/controllers"
+	"github.com/night-slayer18/DriverAppBackEnd/middleware"
 
 	"github.com/gin-gonic/gin"
 )

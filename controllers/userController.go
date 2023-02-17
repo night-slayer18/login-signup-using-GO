@@ -8,9 +8,9 @@ import (
 	"strconv"
 	"time"
 
-	database "github.com/night-slayer18/golang-jwt-project/database"
-	helper "github.com/night-slayer18/golang-jwt-project/helpers"
-	"github.com/night-slayer18/golang-jwt-project/models"
+	database "github.com/night-slayer18/DriverAppBackEnd/database"
+	helper "github.com/night-slayer18/DriverAppBackEnd/helpers"
+	"github.com/night-slayer18/DriverAppBackEnd/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -20,7 +20,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var userCollection *mongo.Collection = database.OpenCollection(database.Client, "user")
+var userCollection *mongo.Collection = database.OpenCollection(database.Client, "Driver")
 var validate = validator.New()
 
 func HashPassword(password string) string {
@@ -43,7 +43,7 @@ func VerifyPassword(userPassword string, providedPassword string) bool {
 	}
 	return check
 }
-func Signup() gin.HandlerFunc {
+func DriverSignup() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		var user models.User
@@ -101,7 +101,7 @@ func Signup() gin.HandlerFunc {
 	}
 }
 
-func Login() gin.HandlerFunc {
+func DriverLogin() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
